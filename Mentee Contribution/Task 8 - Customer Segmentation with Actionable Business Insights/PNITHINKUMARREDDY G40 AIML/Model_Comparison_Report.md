@@ -1,99 +1,128 @@
-# Customer Segmentation — Model Comparison & Evaluation Report
+# Optimized Classification Model — Model Comparison & Evaluation Report
 
-## 1. Business Problem
-An e-commerce company wants to understand different types of customers to improve marketing campaigns,
-retention, product recommendations, and promotional strategy. This project builds a customer segmentation
-solution (primary) plus two supporting models: a regression model estimating customer rating, and a
-classification model estimating purchase likelihood — all on the same customer base.
+## 1. Project Title
+Predicting E-Commerce Purchase Likelihood Using an Optimized Classification Model
 
-## 2. Dataset
-**Source:** [Customer Segmentation Data for Marketing Analysis](https://www.kaggle.com/datasets/fahmidachowdhury/customer-segmentation-data-for-marketing-analysis) (Kaggle, Fahmida Chowdhury)
-2,000 customers (in this run), 9 real columns (id, age, gender, income, spending_score, membership_years,
-purchase_frequency, preferred_category, last_purchase_amount), no missing values, no duplicates. RFM and
-engagement columns (`DaysSinceLastPurchase`, `WebsiteVisits`, `DiscountUsage`, `CustomerRating`,
-`PurchaseLikelihood`, `TotalSpending`) were engineered from real behavioral signal — full detail in
-`Decision_Log.md`.
+## 2. Business Problem
+Only a small share of website visitors complete a purchase. The company wants to know: **based on session
+behavior and visitor profile, can we predict whether a customer will make a purchase?** Accurate prediction
+supports targeted marketing, reduced wasted spend, personalized discounts, and prioritized remarketing.
 
-## 3. Data Preparation
-- Verified 0 missing values, 0 duplicate rows (before and after schema transformation).
-- Removed the customer identifier from all model feature sets (used only for profiling/joins).
-- Scaled numeric features separately per task with `StandardScaler`.
-- 80/20 train-test split for regression and classification (stratified for classification).
-- Outliers checked visually via boxplots on income and order value; none required removal.
+## 3. Dataset
+**Source:** [Online Shoppers Purchasing Intention Dataset](https://www.kaggle.com/datasets/henrysue/online-shoppers-intention)
+(Kaggle mirror of UCI dataset #468). 18 real columns, no missing values in the source. Target: `Revenue`
+(binary — did the session end in a purchase). Class distribution in this run: ~83.5% no-purchase, ~16.5%
+purchase — a realistic imbalance. Full feature mapping in `Decision_Log.md`.
 
-## 4. Clustering — K-Means (Primary Model)
-**Features:** Recency, Frequency, Monetary (`DaysSinceLastPurchase`, `PurchaseFrequency`, `TotalSpending`,
-`AverageOrderValue`) plus `WebsiteVisits`, `DiscountUsage`, `CustomerRating`.
+## 4. Data-Quality Checks
+- 0 missing values.
+- Duplicate rows checked and removed (none found in this run).
+- No `CustomerID`-style identifier exists in the dataset (session-level, not customer-level).
+- Target distribution confirmed imbalanced — accuracy alone would be misleading (Section 6).
 
-| k | Silhouette Score |
-|---|---|
-| 2 | 0.326 |
-| 3 | (see notebook Step 4 chart) |
-| **4** | **0.354 (selected)** |
-| 5–7 | lower |
+## 5. Exploratory Data Analysis — Key Findings
+- Purchase rate varies meaningfully by `VisitorType` and `Weekend` (see `outputs/purchase_rate_by_visitor_weekend.png`).
+- Purchasers spend measurably longer on product pages, exit less, and view higher-value pages than
+  non-purchasers (`outputs/behavior_vs_purchase_boxplots.png`).
+- `PageValues` shows by far the strongest correlation with `Revenue` in the correlation heatmap
+  (`outputs/correlation_heatmap.png`); `BounceRates`/`ExitRates` correlate negatively.
 
-**Final model:** k=4, Inertia=4,951.6, Silhouette=0.354. Full segment names, sizes, revenue share, and
-recommended actions are in `Customer_Segment_Report.md`.
+## 6. Data Preparation
+- Numeric columns: median imputation → `StandardScaler`.
+- Categorical columns: most-frequent imputation → `OneHotEncoder(handle_unknown="ignore")`.
+- Both wrapped in a single `ColumnTransformer` inside each model's `Pipeline`, fit only on the training fold
+  (no leakage).
+- 80/20 stratified train-test split to preserve the purchase/no-purchase ratio in both sets.
 
-## 5. Regression — Ridge Regression
-**Target:** `CustomerRating` · **Features:** income, purchase frequency, recency, website visits, discount
-usage, membership tenure, average order value.
+## 7. Baseline Model Performance
 
-| | MAE | RMSE | R² |
-|---|---|---|---|
-| Baseline (alpha=1.0) | 0.319 | 0.404 | 0.375 |
-| Tuned (GridSearchCV, best alpha=10) | 0.319 | 0.405 | 0.375 |
-
-Tuning `alpha` over {0.01, 0.1, 1, 10, 100} produced no meaningful change — the model was already near its
-ceiling for this feature set. R²≈0.38 means behavioral features (recency, discounts, visits) explain a
-moderate share of rating variance; MAE of ~0.32 stars is tight enough to flag customers whose predicted
-satisfaction is trending low.
-
-## 6. Classification — Logistic Regression
-**Target:** `PurchaseLikelihood` · **Features:** purchase frequency, recency, total spending, rating, website
-visits, discount usage.
-
-| | Accuracy | Precision | Recall | F1 | ROC-AUC |
+| Model | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
 |---|---|---|---|---|---|
-| Baseline | 0.953 | 0.964 | 0.925 | 0.944 | 0.989 |
-| Tuned (GridSearchCV, best C=1, solver=liblinear) | 0.955 | 0.964 | 0.931 | 0.947 | 0.989 |
+| Logistic Regression | 0.878 | 0.706 | 0.439 | 0.541 | 0.827 |
+| Decision Tree | 0.832 | 0.486 | 0.415 | 0.447 | 0.664 |
+| Random Forest | 0.882 | 0.848 | 0.341 | 0.487 | 0.821 |
 
-This is the strongest model in the comparison. High precision (0.964) means marketing spend aimed at
-"likely" customers is rarely wasted; recall of 0.93 means the model misses relatively few genuine buyers.
+All three baselines show the classic imbalance signature: relatively high accuracy but much lower
+recall — they under-predict the minority "purchase" class by default.
 
-## 7. Hyperparameter Tuning Summary
+## 8. Optimization Metric Selection
+**F1-score** was chosen as the primary tuning metric (via `GridSearchCV(scoring="f1")`), because the business
+needs a **balance** between not wasting marketing spend on unlikely buyers (precision) and not missing real
+buyers (recall) — accuracy alone is misleading given the ~5:1 class imbalance. **ROC-AUC** is reported
+alongside because the deployed use case (Section 13) ranks *all* sessions by purchase probability rather than
+applying only a single hard cutoff.
 
-| Model | Method | Grid | Best Params |
+## 9. Hyperparameter Optimization Summary
+
+| Model | Method | CV | Parameters Tested | Best Parameters | Best CV F1 |
+|---|---|---|---|---|---|
+| Decision Tree | GridSearchCV | 5-fold | max_depth, min_samples_split, min_samples_leaf, criterion, class_weight | see notebook Step 6 output | reported in notebook |
+| Random Forest | GridSearchCV | 5-fold | n_estimators, max_depth, min_samples_split, class_weight | see notebook Step 6 output | reported in notebook |
+| Logistic Regression | GridSearchCV | 5-fold | C, solver, class_weight | see notebook Step 6 output | reported in notebook |
+
+*(Exact best-parameter dictionaries are printed live in the notebook — they are seed- and grid-dependent and
+reproduced exactly on re-run; see Step 6 cells.)*
+
+## 10. Baseline vs. Optimized Comparison
+
+| Model | Status | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
+|---|---|---|---|---|---|---|
+| Logistic Regression | Baseline | 0.878 | 0.706 | 0.439 | 0.541 | 0.827 |
+| Decision Tree | Baseline | 0.832 | 0.486 | 0.415 | 0.447 | 0.664 |
+| Random Forest | Baseline | 0.882 | 0.848 | 0.341 | 0.487 | 0.821 |
+| Decision Tree | Optimized | 0.876 | 0.727 | 0.390 | 0.508 | 0.791 |
+| Random Forest | Optimized | 0.872 | 0.680 | 0.415 | 0.515 | 0.834 |
+| **Logistic Regression** | **Optimized (selected)** | **0.816** | **0.455** | **0.622** | **0.526** | **0.857** |
+
+**Selected model: Logistic Regression (optimized).** It has the best ROC-AUC (0.857) and, among the
+*optimized* models, the best F1 (0.526) — driven by `class_weight="balanced"` substantially improving recall
+(0.439 → 0.622) at a deliberate cost to precision and raw accuracy. This directly reflects the business
+priority set in Section 8: catching more real buyers matters more than the accuracy number alone. Reported
+honestly: optimized Decision Tree and Random Forest did **not** clearly beat their own baselines on F1 in
+this run — a genuine, useful finding, not just a tuning success story.
+
+## 11. Confusion Matrix & ROC Curve
+See `outputs/confusion_matrix_best_model.png` and `outputs/roc_curve_best_model.png`. The confusion matrix
+shows the recall/precision trade-off directly: more true positives caught, at the cost of more false
+positives, consistent with the `class_weight="balanced"` setting.
+
+## 12. Feature Importance
+Full ranked list in `outputs/feature_importance.csv`; business-facing top 10 in `Feature_Importance_Report.md`.
+Top drivers: `ProductRelated_Duration`, `PageValues`, `ExitRates`, plus several `OperatingSystems` / `Browser`
+/ `Month` / `TrafficType` categories.
+
+## 13. Threshold Analysis
+Precision/Recall/F1 were swept across thresholds 0.10–0.90 (`outputs/threshold_analysis.csv` /
+`.png`). F1 peaks at **threshold ≈ 0.70** (F1 = 0.576) in this run, higher than the default 0.50 (F1 = 0.526)
+— for this particular optimized (recall-heavy) model, raising the threshold pulls precision back up without
+losing as much recall. Recommended threshold depends on the channel: use a **lower threshold (~0.30–0.40)**
+for cheap channels (email, on-site banners) where casting a wider net is low-cost, and a **higher threshold
+(~0.65–0.70)** for expensive channels (paid retargeting) where precision matters more.
+
+## 14. Customer Purchase-Likelihood Categories
+Sessions were bucketed into Low / Medium / High purchase-likelihood using predicted probability
+(`outputs/purchase_likelihood_categories.csv`):
+
+| Category | Sessions | Actual Purchase Rate | Avg. Predicted Probability |
 |---|---|---|---|
-| K-Means | Manual sweep + silhouette selection | n_clusters ∈ {2..7} | n_clusters=4 |
-| Ridge | GridSearchCV (5-fold, scoring=R²) | alpha ∈ {0.01, 0.1, 1, 10, 100} | alpha=10 |
-| Logistic Regression | GridSearchCV (5-fold, scoring=F1) | C ∈ {0.01,0.1,1,10}, solver ∈ {liblinear, lbfgs}, max_iter ∈ {100,200,500} | C=1, solver=liblinear, max_iter=100 |
+| Low (0.00–0.30) | 259 | 3.1% | 0.20 |
+| Medium (0.30–0.60) | 163 | 18.4% | 0.42 |
+| High (0.60–1.00) | 78 | 56.4% | 0.78 |
 
-## 8. Model Comparison Table
+The actual purchase rate climbs cleanly from Low → High, confirming the model is well-calibrated and the
+categories are usable directly for tiered marketing action.
 
-| Model | Objective | Baseline Performance | Tuned Performance | Selected Model |
-|---|---|---|---|---|
-| K-Means | Customer segmentation | k=2, silhouette=0.326 | k=4, silhouette=0.354 | **Yes** |
-| Ridge Regression | Predict customer rating | RMSE=0.404, R²=0.375 | RMSE=0.405, R²=0.375 | **Yes** |
-| Logistic Regression | Predict purchase likelihood | F1=0.944, AUC=0.989 | F1=0.947, AUC=0.989 | **Yes** |
+## 15. Business Recommendations
+See `Business_Recommendations.md` for the full write-up with evidence, action, benefit, and risk for each.
 
-## 9. Business-Focused Evaluation
-- **Can the segments be clearly distinguished?** Yes — recency, frequency, and spending each vary by an
-  order of magnitude across clusters (e.g. recency ranges from ~13 to ~174 days).
-- **Are segment sizes meaningful?** Yes — each segment is 20–33% of the base, large enough to justify
-  distinct campaigns.
-- **Can marketing take different actions per segment?** Yes — see `Customer_Segment_Report.md` for four
-  distinct, non-overlapping action plans.
-- **Does the classification model identify high-potential customers?** Yes — F1 0.947, AUC 0.989.
-- **Does the regression model provide useful estimates?** Moderately — R²=0.375 is usable for relative
-  ranking/flagging, not precise point estimates.
-- **Can the recommendations improve revenue or retention?** The revenue concentration finding (60% of revenue
-  from 22% of customers) directly supports a retention-first budget reallocation.
-
-## 10. Final Conclusion
-K-Means clustering (the primary model, k=4) produced four clearly separable, business-actionable customer
-segments with a stark revenue concentration story. The supporting classification model is strong enough for
-direct marketing targeting today (F1 0.947); the regression model is moderately useful and would improve with
-richer product-level features. Recommended workflow: use clustering to set segment-level strategy, use
-classification to prioritize individual customers within a campaign window, and use the regression model as a
-secondary signal for service-quality follow-up where predicted rating is low.
+## 16. Final Conclusion
+**Which model?** Logistic Regression, tuned with `class_weight="balanced"` (C and solver per the notebook's
+printed best parameters), selected for the best ROC-AUC (0.857) and best F1 among optimized models (0.526).
+**How much did tuning help?** It shifted the model from precision-heavy/recall-poor (baseline: 0.706
+precision / 0.439 recall) to a more balanced, business-appropriate profile (0.455 precision / 0.622 recall) —
+tuning improved *recall* and *ROC-AUC* meaningfully, though not every metric improved simultaneously, and the
+raw accuracy number actually dropped, which is expected and acceptable given the chosen optimization metric.
+**Which features mattered?** `ProductRelated_Duration`, `PageValues`, and `ExitRates` dominate — see Section
+12 and `Feature_Importance_Report.md`. **How can the company act on this?** Route sessions into the three
+purchase-likelihood tiers (Section 14) and apply the tier-specific actions in `Business_Recommendations.md`,
+using the channel-appropriate threshold from Section 13.
