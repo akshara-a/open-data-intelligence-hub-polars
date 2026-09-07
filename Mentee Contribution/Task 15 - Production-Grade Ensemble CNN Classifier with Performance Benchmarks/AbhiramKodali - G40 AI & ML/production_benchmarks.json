@@ -1,0 +1,35 @@
+[
+    {
+        "model": "cnn_small",
+        "clean_accuracy": 0.5333,
+        "robust_accuracy": 0.8833,
+        "robustness_accuracy_drop": -0.35,
+        "parameter_count": 7265,
+        "model_size_mb": 0.1355,
+        "latency_ms_per_image": 4.9518,
+        "throughput_images_per_second": 201.9487,
+        "memory_increase_mb": 0.0938
+    },
+    {
+        "model": "cnn_standard",
+        "clean_accuracy": 1.0,
+        "robust_accuracy": 1.0,
+        "robustness_accuracy_drop": 0.0,
+        "parameter_count": 109889,
+        "model_size_mb": 1.3175,
+        "latency_ms_per_image": 11.1634,
+        "throughput_images_per_second": 89.5788,
+        "memory_increase_mb": 0.125
+    },
+    {
+        "model": "cnn_deep",
+        "clean_accuracy": 1.0,
+        "robust_accuracy": 1.0,
+        "robustness_accuracy_drop": 0.0,
+        "parameter_count": 303649,
+        "model_size_mb": 3.5497,
+        "latency_ms_per_image": 28.9616,
+        "throughput_images_per_second": 34.5285,
+        "memory_increase_mb": 0.0898
+    }
+]
