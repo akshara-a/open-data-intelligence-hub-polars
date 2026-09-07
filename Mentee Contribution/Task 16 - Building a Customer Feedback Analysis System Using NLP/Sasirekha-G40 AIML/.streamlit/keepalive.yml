@@ -1,0 +1,16 @@
+name: Streamlit Keep Alive
+
+on:
+  schedule:
+    # Runs automatically every 4 days at midnight
+    - cron: '0 0 */4 * *'
+  workflow_dispatch: # Allows you to trigger this manually from GitHub if needed
+
+jobs:
+  ping_app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit Web application
+        run: |
+          "https://customer-feedback-nlp-ukynpuhwmydrhfcwnjkegl.streamlit.app/"
+app

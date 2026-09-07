@@ -1,0 +1,47 @@
+CUSTOMER FEEDBACK NLP - EVALUATION
+
+Dataset rows: 1750
+Training rows: 1400
+Test rows: 350
+
+SENTIMENT
+Accuracy: 0.7371
+Weighted F1: 0.6280
+              precision    recall  f1-score   support
+
+    negative       0.74      1.00      0.85       259
+    positive       0.00      0.00      0.00        91
+
+    accuracy                           0.74       350
+   macro avg       0.37      0.50      0.42       350
+weighted avg       0.55      0.74      0.63       350
+
+PRODUCT / COMPLAINT CATEGORY
+Accuracy: 0.7914
+Weighted F1: 0.7937
+                                                    precision    recall  f1-score   support
+
+            Checking or savings account or service       0.79      0.84      0.81        49
+                       Credit card or prepaid card       0.91      0.67      0.77        60
+                Credit reporting, repair, or other       0.68      0.86      0.76        49
+                                   Debt collection       0.55      0.63      0.59        38
+                                             Loans       0.85      0.80      0.82        55
+Money transfer, virtual currency, or money service       0.87      0.84      0.85        56
+                                          Mortgage       0.93      0.91      0.92        43
+
+                                          accuracy                           0.79       350
+                                         macro avg       0.80      0.79      0.79       350
+                                      weighted avg       0.81      0.79      0.79       350
+
+PRIORITY
+Accuracy: 0.8029
+Weighted F1: 0.7471
+              precision    recall  f1-score   support
+
+        high       0.80      1.00      0.89       267
+         low       0.94      0.18      0.30        83
+
+    accuracy                           0.80       350
+   macro avg       0.87      0.59      0.59       350
+weighted avg       0.83      0.80      0.75       350
+
