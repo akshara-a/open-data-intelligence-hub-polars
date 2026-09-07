@@ -1,0 +1,27 @@
+# requirements.txt
+# Required Python packages for Multi-Class Sentiment Analyzer
+
+# Core data manipulation and numerical operations
+pandas>=1.5.0
+numpy>=1.24.0
+
+# Text processing
+regex>=2022.10.31
+
+# Visualization
+matplotlib>=3.6.0
+
+# Machine Learning
+scikit-learn>=1.2.0
+
+# Model serialization
+joblib>=1.2.0
+
+# Jupyter Notebook (optional, for running .ipynb)
+notebook>=6.5.0
+
+# Hugging Face datasets (for loading datasets)
+datasets>=2.10.0
+
+# Additional dependencies for datasets
+pyarrow>=12.0.0
