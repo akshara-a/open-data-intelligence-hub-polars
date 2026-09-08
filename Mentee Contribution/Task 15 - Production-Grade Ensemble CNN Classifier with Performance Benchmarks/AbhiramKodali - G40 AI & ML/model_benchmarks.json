@@ -1,0 +1,41 @@
+[
+    {
+        "model": "CNN_Small",
+        "accuracy": 0.5333,
+        "precision": 0.5172,
+        "recall": 1.0,
+        "f1_score": 0.6818,
+        "parameter_count": 7265,
+        "model_size_mb": 0.1355,
+        "latency_ms_per_image": 3.9463,
+        "throughput_images_per_second": 253.4034,
+        "memory_increase_mb": 0.0586,
+        "training_time_seconds": 45.19
+    },
+    {
+        "model": "CNN_Standard",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "parameter_count": 109889,
+        "model_size_mb": 1.3175,
+        "latency_ms_per_image": 10.588,
+        "throughput_images_per_second": 94.4468,
+        "memory_increase_mb": 0.0,
+        "training_time_seconds": 115.46
+    },
+    {
+        "model": "CNN_Deep",
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "parameter_count": 303649,
+        "model_size_mb": 3.5497,
+        "latency_ms_per_image": 28.2342,
+        "throughput_images_per_second": 35.4181,
+        "memory_increase_mb": 0.3281,
+        "training_time_seconds": 354.64
+    }
+]

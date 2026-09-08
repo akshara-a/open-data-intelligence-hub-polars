@@ -1,0 +1,19 @@
+# Task 13 generated/raw datasets
+dataset/
+data/train/
+data/test/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Dataset archive
+*.zip

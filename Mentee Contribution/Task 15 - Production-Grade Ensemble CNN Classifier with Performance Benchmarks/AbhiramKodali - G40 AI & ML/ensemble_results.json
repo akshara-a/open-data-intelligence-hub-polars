@@ -1,0 +1,81 @@
+{
+    "majority_voting": {
+        "clean": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "confusion_matrix": [
+                [
+                    30,
+                    0
+                ],
+                [
+                    0,
+                    30
+                ]
+            ]
+        },
+        "robust": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "confusion_matrix": [
+                [
+                    30,
+                    0
+                ],
+                [
+                    0,
+                    30
+                ]
+            ]
+        },
+        "robust_accuracy_drop": 0.0
+    },
+    "soft_voting": {
+        "clean": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "confusion_matrix": [
+                [
+                    30,
+                    0
+                ],
+                [
+                    0,
+                    30
+                ]
+            ]
+        },
+        "robust": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "confusion_matrix": [
+                [
+                    30,
+                    0
+                ],
+                [
+                    0,
+                    30
+                ]
+            ]
+        },
+        "robust_accuracy_drop": 0.0
+    },
+    "model_disagreement": {
+        "cases": 28,
+        "rate": 0.4666666666666667
+    },
+    "ensemble_performance": {
+        "combined_latency_ms_per_image": 45.0768,
+        "estimated_throughput_images_per_second": 22.18436091293082,
+        "latency_basis": "sum of current individual-model benchmark latencies"
+    }
+}
