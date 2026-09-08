@@ -1,0 +1,26 @@
+{
+  "total_records": 378,
+  "training_records": 283,
+  "test_records": 95,
+  "tfidf_features": 488,
+  "model": "TF-IDF + Logistic Regression",
+  "ngram_range": [
+    1,
+    2
+  ],
+  "max_iterations": 1000,
+  "random_seed": 42,
+  "metrics": {
+    "accuracy": 0.968421052631579,
+    "macro_precision": 0.9714285714285714,
+    "macro_recall": 0.9680779569892474,
+    "macro_f1": 0.9686725104635552,
+    "weighted_f1": 0.9686936246087857
+  },
+  "incorrect_predictions": 3,
+  "class_distribution": {
+    "neutral": 127,
+    "positive": 126,
+    "negative": 125
+  }
+}

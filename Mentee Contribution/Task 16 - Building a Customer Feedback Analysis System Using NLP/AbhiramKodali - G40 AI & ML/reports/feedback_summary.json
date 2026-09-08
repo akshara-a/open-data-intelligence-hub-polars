@@ -1,0 +1,39 @@
+{
+  "total_feedback_records": 378,
+  "sentiment_distribution": {
+    "neutral": 126,
+    "negative": 126,
+    "positive": 126
+  },
+  "category_distribution": {
+    "support": 54,
+    "bug": 54,
+    "ui": 54,
+    "payment": 54,
+    "performance": 54,
+    "feature_request": 54,
+    "login": 54
+  },
+  "most_common_sentiment": "negative",
+  "most_common_category": "bug",
+  "models": {
+    "sentiment": "TF-IDF + Logistic Regression",
+    "category": "TF-IDF + Logistic Regression"
+  },
+  "test_size": 95,
+  "sentiment_metrics": {
+    "accuracy": 0.9894736842105263,
+    "macro_precision": 0.98989898989899,
+    "macro_recall": 0.989247311827957,
+    "macro_f1": 0.989407313997478,
+    "weighted_f1": 0.9894683745934825
+  },
+  "category_metrics": {
+    "accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "weighted_f1": 1.0
+  },
+  "tfidf_features": 709
+}

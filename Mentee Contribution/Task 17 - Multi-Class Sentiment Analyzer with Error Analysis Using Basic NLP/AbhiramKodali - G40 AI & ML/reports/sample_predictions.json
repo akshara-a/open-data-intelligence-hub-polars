@@ -1,0 +1,14 @@
+[
+  {
+    "text": "The application is fast and very easy to use.",
+    "predicted_sentiment": "negative"
+  },
+  {
+    "text": "The service is available today.",
+    "predicted_sentiment": "neutral"
+  },
+  {
+    "text": "The application keeps crashing and is very frustrating.",
+    "predicted_sentiment": "negative"
+  }
+]
