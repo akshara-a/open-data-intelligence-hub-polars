@@ -1,0 +1,30 @@
+
+BUSINESS RECOMMENDATIONS
+
+1. High purchase-likelihood customers should receive
+   personalized product recommendations and cart reminders.
+
+2. Customers with medium purchase likelihood can be targeted
+   using small discounts, reviews, and promotional emails.
+
+3. Avoid expensive marketing campaigns for low-likelihood
+   customers until stronger engagement signals appear.
+
+4. Use the most influential behavioral features to identify
+   customers showing strong buying intent.
+
+5. Use purchase probabilities instead of only class predictions
+   to prioritize remarketing campaigns.
+
+6. Thresholds can be adjusted according to business goals.
+   Lower thresholds increase recall, while higher thresholds
+   generally increase precision.
+
+LIMITATIONS
+
+1. This project uses a synthetic educational dataset.
+2. Feature importance indicates predictive influence,
+   not causation.
+3. Real-world customer behavior may change over time.
+4. The model should be retrained when new customer data
+   becomes available.
