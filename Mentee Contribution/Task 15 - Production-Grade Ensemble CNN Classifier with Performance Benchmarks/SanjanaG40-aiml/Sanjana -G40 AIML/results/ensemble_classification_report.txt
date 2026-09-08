@@ -1,0 +1,14 @@
+WeatherNet-05 Ensemble Classification Report
+=================================================================
+
+              precision    recall  f1-score   support
+
+     Class 0     0.8107    0.4085    0.5433      1006
+     Class 1     0.6360    0.8042    0.7103       189
+     Class 2     0.2901    0.6393    0.3991       280
+     Class 3     0.5317    0.7758    0.6310       281
+     Class 4     0.8225    0.8077    0.8150       941
+
+    accuracy                         0.6377      2697
+   macro avg     0.6182    0.6871    0.6197      2697
+weighted avg     0.7194    0.6377    0.6440      2697

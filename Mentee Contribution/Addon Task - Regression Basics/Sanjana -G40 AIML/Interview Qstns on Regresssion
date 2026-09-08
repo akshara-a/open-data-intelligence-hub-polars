@@ -1,0 +1,126 @@
+AI/ML
+Interview Questions: Regressions
+1. What is regression in machine learning, and when is it used?
+Regression is a supervised learning technique used to predict a continuous numeric value based on one or more input features. Unlike classification (which predicts discrete labels), regression outputs a real number.
+Used when:
+●	Predicting prices (houses, stocks, products)
+●	Forecasting demand, sales, or temperature
+●	Estimating a quantity like age, salary, or time-to-event
+2. What is the difference between simple linear regression and multiple linear regression?
+	Simple Linear Regression	Multiple Linear Regression
+Inputs	1 independent variable	2+ independent variables
+Equation	y = β0 + β1x	y = β0 + β1x1 + β2x2 + ... + βnxn
+Use case	Predicting house price from size alone	Predicting house price from size, location, age, etc.
+Multiple regression captures more real-world complexity but is more prone to multicollinearity issues.
+3. What assumptions are made by linear regression?
+●	Linearity — relationship between X and y is linear
+●	Independence — observations/errors are independent of each other
+●	Homoscedasticity — constant variance of residuals across all values of X
+●	Normality of residuals — errors are normally distributed
+●	No (or low) multicollinearity — independent variables aren't highly correlated with each other
+●	No autocorrelation — especially important in time-series data
+Violating these doesn't make the model unusable, but it undermines the validity of coefficient estimates and p-values.
+4. What is the difference between a dependent variable and an independent variable?
+●	Dependent variable (y): the outcome you're trying to predict. Also called the target or response variable.
+●	Independent variable (X): the input(s) used to predict y. Also called features or predictors.
+Example: predicting salary (dependent) from years of experience (independent).
+5. What do the slope and intercept represent in a linear regression model?
+For y = β0 + β1x:
+●	Intercept (β0): predicted value of y when x = 0. The baseline.
+●	Slope (β1): the change in y for a one-unit increase in x. It captures the strength and direction of the relationship.
+6. What is the purpose of the cost function in regression?
+The cost function measures how wrong the model's predictions are compared to actual values. It gives a single number to minimize during training.
+Linear regression typically uses Mean Squared Error (MSE) as its cost function. Training means finding the parameter values (slope, intercept) that minimize this cost, usually via gradient descent or the normal equation.
+7. What is Mean Squared Error, and why is it commonly used for regression?
+MSE = (1/n) × Σ (yi − ŷi)²
+It's the average of squared differences between actual and predicted values.
+Why commonly used:
+●	Squaring removes negative signs, so errors don't cancel out
+●	Penalizes larger errors more heavily (good for catching bad predictions)
+●	Differentiable everywhere, making it ideal for gradient-based optimization
+8. What is the difference between Mean Absolute Error, Mean Squared Error, and Root Mean Squared Error?
+Metric	Formula	Sensitivity to Outliers	Units
+MAE	Average of |y − ŷ|	Low — treats errors linearly	Same as target variable
+MSE	Average of (y − ŷ)²	High — squares amplify errors	Squared units
+RMSE	√MSE	High (same as MSE)	Same as target variable
+When to use which:
+●	MAE: when you want a robust metric and outliers shouldn't dominate
+●	MSE: when large errors are especially costly and should be penalized more
+●	RMSE: like MSE but interpretable in original units — most commonly reported
+9. What is the R-squared score, and how should it be interpreted?
+R² measures the proportion of variance in y explained by the model, relative to a baseline (predicting the mean every time).
+R² = 1 − (SS_residual / SS_total)
+Interpretation:
+●	R² = 1 → model explains all variance (perfect fit)
+●	R² = 0 → model performs no better than predicting the mean
+●	R² < 0 → model performs worse than the mean baseline (possible on test data)
+●	R² = 0.75 → model explains 75% of the variance in the target
+Caveat: R² always increases (or stays the same) as you add more features, even useless ones — which is why adjusted R² exists.
+10. What is adjusted R-squared, and why is it useful?
+Adjusted R² penalizes the addition of irrelevant features, unlike plain R² which never decreases when you add more variables.
+Adjusted R² = 1 − [(1 − R²)(n − 1) / (n − k − 1)]
+where n = number of observations, k = number of predictors.
+Why useful: It only increases if the new feature genuinely improves the model more than expected by chance. It's the better metric for comparing models with different numbers of features.
+11. What is overfitting in a regression model?
+The model learns the noise and random fluctuations in the training data, not just the underlying pattern.
+Signs:
+●	Very high accuracy/R² on training data
+●	Poor performance on test/unseen data
+●	Model is overly complex (too many features, too high polynomial degree) relative to the data available
+Fixes: regularization (Ridge/Lasso), reducing model complexity, more training data, cross-validation.
+12. What is underfitting in a regression model?
+The model is too simple to capture the underlying pattern in the data.
+Signs:
+●	Poor performance on both training and test data
+●	High bias — model makes systematic errors
+●	Example: fitting a straight line to clearly non-linear data
+Fixes: add more relevant features, increase model complexity (e.g., polynomial terms), reduce regularization strength.
+13. What is multicollinearity, and how does it affect regression?
+Occurs when two or more independent variables are highly correlated with each other.
+Effects:
+●	Coefficient estimates become unstable and unreliable
+●	Standard errors inflate, making it hard to tell which variable actually matters
+●	Coefficients can even flip sign in ways that don't make intuitive sense
+●	Doesn't hurt prediction accuracy much, but destroys interpretability
+14. How can multicollinearity be detected?
+●	Correlation matrix — look for high pairwise correlations (e.g., > 0.8) between features
+●	Variance Inflation Factor (VIF) — VIF > 5 (some say >10) signals problematic multicollinearity
+VIFi = 1 / (1 − Ri²)
+●	Condition number of the feature matrix — high values indicate instability
+15. What is regularization, and why is it used?
+Regularization adds a penalty term to the cost function based on the size of the model's coefficients, discouraging overly complex models.
+Why used:
+●	Reduces overfitting by shrinking coefficients
+●	Improves generalization to unseen data
+●	Handles multicollinearity by stabilizing coefficient estimates
+●	Can perform automatic feature selection (Lasso)
+16. What is the difference between Ridge, Lasso, and Elastic Net regression?
+	Ridge (L2)	Lasso (L1)	Elastic Net
+Penalty	Sum of squared coefficients	Sum of absolute coefficients	Combination of L1 + L2
+Effect on coefficients	Shrinks toward zero, never exactly zero	Can shrink to exactly zero	Mix of both behaviors
+Feature selection	No	Yes (automatic)	Yes, partial
+Best when	Many small/medium correlated predictors	Few predictors truly matter, want sparsity	Correlated features + need sparsity
+17. How does Lasso regression perform feature selection?
+Lasso's L1 penalty (sum of absolute coefficient values) has a geometric property: the optimization can push coefficients exactly to zero, not just close to it (unlike Ridge's L2 penalty, which shrinks smoothly but rarely hits zero).
+When a coefficient becomes zero, that feature is effectively removed from the model — this is what makes Lasso useful for automatic feature selection, especially with high-dimensional data.
+18. What is polynomial regression?
+An extension of linear regression where you add polynomial terms (x², x³, etc.) of the features to model non-linear relationships.
+y = β0 + β1x + β2x² + β3x³ + ...
+It's still technically "linear regression" because it's linear in the coefficients — only the input features are transformed. Useful when data shows curvature, but higher degrees risk overfitting quickly.
+19. How do outliers affect a regression model?
+
+Linear regression (especially with MSE as the cost function) is highly sensitive to outliers because errors are squared — one extreme point can disproportionately pull the regression line toward it.
+Consequences:
+●	Distorted slope and intercept estimates
+●	Inflated MSE/RMSE, misleading model evaluation
+●	Reduced generalization to normal data points
+Mitigation: remove/cap outliers (with justification), use robust regression techniques, or switch to MAE-based loss which is less sensitive to extreme values.
+20. How would you evaluate the performance of a regression model?
+A thorough evaluation combines multiple angles:
+●	Error metrics: MAE, MSE, RMSE — quantify prediction error magnitude
+●	R² and Adjusted R²: how much variance is explained, accounting for model complexity
+●	Residual analysis: plot residuals vs. predicted values — should show no pattern if assumptions hold
+●	Cross-validation: k-fold CV to check consistency of performance across different data splits
+●	Check for overfitting/underfitting: compare train vs. test performance
+●	Check assumptions: linearity, homoscedasticity, normality of residuals, multicollinearity (VIF)
+A model with low RMSE but poor residual patterns or high train-test gap isn't actually reliable — always look at more than one metric.

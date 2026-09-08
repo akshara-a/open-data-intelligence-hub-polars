@@ -1,4 +1,4 @@
-# Virtual environments
+  
 venv/
 .venv/
 env/
@@ -11,22 +11,53 @@ __pycache__/
 .ipynb_checkpoints/
 *.pyc
 
-# Large trained model artifacts
-*.pkl
 
-# Environment variables
-.env
-.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
 
 # IDE
 .vscode/
 .idea/
 
-# Operating system files
+# OS
 .DS_Store
 Thumbs.db
 
-# Streamlit secrets
-.streamlit/secrets.toml
-Mentee Contribution/Task 15 - Production-Grade Ensemble CNN Classifier with Performance Benchmarks/Venkatavivek - G40 AIML/data/dataset.zip
-**/data/dataset.zip
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ML / TensorFlow
+*.h5
+*.keras
+*.ckpt
+checkpoint/
+checkpoints/
+logs/
+wandb/
+
+# Large datasets
+data/
+datasets/
+*.parquet
+*.csv
+*.zip
+*.tar
+*.tar.gz
+
+# Generated results/caches
+__pycache__/
+*.log

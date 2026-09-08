@@ -1,0 +1,133 @@
+# Transformers in Machine Learning
+
+Transformers are neural-network architectures designed to capture relationships between elements in sequential or structured data. They are especially important in natural language processing (NLP), but are also widely used in computer vision, speech processing, recommendation systems, and generative AI.
+
+## Why Transformers Are Needed
+
+Traditional recurrent models such as RNNs and LSTMs process sequences step by step. This can make it difficult to capture relationships between distant elements and can limit parallel processing.
+
+Transformers address these limitations through **attention mechanisms**, allowing the model to consider relationships among tokens across a sequence more directly.
+
+Key advantages include:
+
+* Processing sequence elements in parallel during encoding
+* Capturing long-range dependencies through attention
+* Avoiding the fixed-size context bottleneck of traditional sequence-to-sequence models
+* Providing a flexible architecture for many AI applications
+
+## Core Concepts
+
+### 1. Self-Attention
+
+Self-attention determines how strongly each token should relate to other tokens in the same sequence.
+
+Each token is represented using three vectors:
+
+* **Query (Q)**
+* **Key (K)**
+* **Value (V)**
+
+Scaled dot-product attention is commonly expressed as:
+
+$$
+Attention(Q,K,V)=softmax\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+$$
+
+The resulting attention weights determine how information from different tokens contributes to each token's representation.
+
+### 2. Multi-Head Attention
+
+Instead of using a single attention operation, Transformers use multiple attention heads in parallel. Each head can learn different relationships or patterns within the data.
+
+The outputs of the heads are combined to create a richer representation.
+
+### 3. Positional Encoding
+
+Because Transformers process tokens in parallel, they do not inherently know the order of tokens.
+
+**Positional encodings** are therefore added to token embeddings to provide information about each token's position in the sequence.
+
+### 4. Feed-Forward Networks
+
+A position-wise feed-forward network further transforms the representation produced by attention.
+
+A simplified formulation is:
+
+$$
+FFN(x)=ReLU(xW_1+b_1)W_2+b_2
+$$
+
+The transformation is applied independently to each position.
+
+### 5. Add & Norm
+
+Transformer sub-layers use:
+
+* **Residual connections**, which add the input to a layer's output
+* **Layer normalization**, which helps stabilize training
+
+Together, these mechanisms improve gradient flow and make deep Transformer networks easier to train.
+
+### 6. Embeddings
+
+Transformers operate on numerical representations rather than raw words. Tokens are therefore converted into dense vectors called **embeddings**.
+
+These embeddings are learned during training so that tokens with useful semantic or contextual relationships can develop meaningful representations.
+
+### 7. Encoder-Decoder Architecture
+
+The original Transformer architecture contains an **encoder** and a **decoder**.
+
+The encoder processes the input sequence, while the decoder generates the output sequence.
+
+For example, in machine translation, the encoder can process a French sentence and the decoder can generate its English translation.
+
+The architecture uses three important forms of attention:
+
+#### Encoder Self-Attention
+
+The encoder allows each token to attend to other tokens in the input sequence, helping it understand context.
+
+#### Masked Decoder Self-Attention
+
+The decoder masks future tokens so that the model cannot look ahead while generating the next token.
+
+#### Encoder-Decoder Attention
+
+The decoder uses information from the encoder output to focus on relevant parts of the original input while generating the output.
+
+### 8. Softmax Output Layer
+
+For sequence generation, the decoder output is passed through a linear layer and then through **softmax** to produce probabilities for possible next tokens.
+
+The token with the highest probability can then be selected as the next prediction.
+
+## Applications
+
+Transformers are used in many areas of artificial intelligence:
+
+* **Natural Language Processing:** translation, summarization, sentiment analysis, and named entity recognition
+* **Speech Recognition:** converting speech into text
+* **Computer Vision:** image classification, object detection, and image generation
+* **Recommendation Systems:** modeling user preferences and behavior
+* **Text and Music Generation:** producing written or musical content
+
+## Limitations
+
+Despite their effectiveness, Transformers have several limitations:
+
+* High computational requirements
+* Significant memory consumption, particularly for long sequences
+* Dependence on large datasets for strong performance
+* Input-length constraints
+* Limited interpretability in some applications
+* Potential overfitting without appropriate regularization
+
+## Conclusion
+
+Transformers changed sequence modeling by replacing strictly sequential processing with attention-based processing. Their ability to model relationships between tokens and efficiently process large amounts of data has made them foundational to modern AI systems.
+
+The architecture's major components—including self-attention, multi-head attention, positional encoding, feed-forward networks, residual connections, normalization, embeddings, and encoder-decoder mechanisms—work together to provide powerful contextual representations.
+
+Source: [GeeksforGeeks — Transformers in Machine Learning]
+(https://www.geeksforgeeks.org/machine-learning/getting-started-with-transformers/?utm_source=chatgpt.com)
