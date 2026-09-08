@@ -1,0 +1,27 @@
+MULTI-CLASS SENTIMENT ANALYZER
+==============================
+
+Dataset Size: 151
+Training Samples: 120
+Testing Samples: 31
+Accuracy: 0.6774
+Accuracy Percentage: 67.74%
+Error Rate: 0.3226
+Error Percentage: 32.26%
+
+Classification Report:
+              precision    recall  f1-score   support
+
+    negative       0.60      0.90      0.72        10
+     neutral       0.69      0.82      0.75        11
+    positive       1.00      0.30      0.46        10
+
+    accuracy                           0.68        31
+   macro avg       0.76      0.67      0.64        31
+weighted avg       0.76      0.68      0.65        31
+
+
+Confusion Matrix:
+[[9 1 0]
+ [2 9 0]
+ [4 3 3]]
